@@ -1,4 +1,4 @@
-package devilseye.coctailadvisor
+package devilseye.cocktailadvisor
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -17,6 +17,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("devilseye.coctailadvisor", appContext.packageName)
+        assertEquals("devilseye.cocktailadvisor", appContext.packageName)
     }
 }

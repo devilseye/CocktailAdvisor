@@ -1,4 +1,4 @@
-package devilseye.coctailadvisor
+package devilseye.cocktailadvisor
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
