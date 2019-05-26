@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CocktailAdvisor</string>
+    <string name="app_name">Cocktail Advisor</string>
     <string name="title_home">Главная</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_dashboard">Доска</string>
     <string name="title_notifications">Уведомления</string>
 </resources>
