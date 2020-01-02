@@ -6,9 +6,6 @@
 /.idea/modules.xml
 /.idea/workspace.xml
 .idea
-gradle
-gradlew
-gradlew.bat
 .DS_Store
 /build
 /captures
