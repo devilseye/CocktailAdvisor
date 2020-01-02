@@ -1,4 +1,4 @@
-package devilseye.cocktailadvisor.model
+package devilseye.cocktailadvisor.android.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

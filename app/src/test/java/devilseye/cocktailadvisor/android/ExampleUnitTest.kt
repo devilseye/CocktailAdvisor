@@ -1,4 +1,4 @@
-package devilseye.cocktailadvisor
+package devilseye.cocktailadvisor.android
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

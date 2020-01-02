@@ -1,4 +1,4 @@
-package devilseye.cocktailadvisor
+package devilseye.cocktailadvisor.android
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

@@ -1,9 +1,9 @@
-package devilseye.cocktailadvisor.dao
+package devilseye.cocktailadvisor.android.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import devilseye.cocktailadvisor.model.IngredientCategory
+import devilseye.cocktailadvisor.android.model.IngredientCategory
 
 @Dao
 interface IngredientCategoryDao {

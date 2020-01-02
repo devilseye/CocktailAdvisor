@@ -1,4 +1,4 @@
-package devilseye.cocktailadvisor.database
+package devilseye.cocktailadvisor.android.database
 
 
 import android.content.Context
@@ -6,9 +6,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import devilseye.cocktailadvisor.dao.IngredientCategoryDao
-import devilseye.cocktailadvisor.model.IngredientCategory
-import devilseye.cocktailadvisor.util.ioThread
+import devilseye.cocktailadvisor.android.dao.IngredientCategoryDao
+import devilseye.cocktailadvisor.android.model.IngredientCategory
+import devilseye.cocktailadvisor.android.util.ioThread
 
 @Database(entities = [IngredientCategory::class], version = 1)
 abstract class CocktailsDatabase : RoomDatabase() {

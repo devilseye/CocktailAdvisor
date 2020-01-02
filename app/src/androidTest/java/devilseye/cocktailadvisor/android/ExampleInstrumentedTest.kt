@@ -1,4 +1,4 @@
-package devilseye.cocktailadvisor
+package devilseye.cocktailadvisor.android
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry

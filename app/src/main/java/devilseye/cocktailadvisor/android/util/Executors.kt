@@ -1,4 +1,4 @@
-package devilseye.cocktailadvisor.util
+package devilseye.cocktailadvisor.android.util
 
 import java.util.concurrent.Executors
 
