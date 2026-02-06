@@ -1,6 +1,5 @@
 package devilseye.cocktailadvisor.android.database
 
-
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -8,46 +7,52 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import devilseye.cocktailadvisor.android.dao.IngredientCategoryDao
 import devilseye.cocktailadvisor.android.model.IngredientCategory
-import devilseye.cocktailadvisor.android.util.ioThread
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
-@Database(entities = [IngredientCategory::class], version = 1)
+@Database(entities = [IngredientCategory::class], version = 1, exportSchema = true)
 abstract class CocktailsDatabase : RoomDatabase() {
-
     abstract fun ingredientCategoryDao(): IngredientCategoryDao
 
     companion object {
-
         @Volatile
-        private var INSTANCE: CocktailsDatabase? = null
+        private var instance: CocktailsDatabase? = null
 
         fun getInstance(context: Context): CocktailsDatabase =
-            INSTANCE ?: synchronized(this) {
-                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
+            instance ?: synchronized(this) {
+                instance ?: buildDatabase(context.applicationContext).also { instance = it }
             }
 
-        private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(
-                context.applicationContext,
-                CocktailsDatabase::class.java, "Cocktails.db"
-            )
-                // prepopulate the database after onCreate was called
-                .addCallback(object : Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        ioThread {
-                            getInstance(context).ingredientCategoryDao().insertIngredientCategories(PREPOPULATE_DATA)
+        private fun buildDatabase(context: Context): CocktailsDatabase {
+            val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+            return Room.databaseBuilder(context, CocktailsDatabase::class.java, "Cocktails.db")
+                .addCallback(DatabaseSeeder(applicationScope))
+                .build()
+        }
+
+        private class DatabaseSeeder(private val scope: CoroutineScope) : Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                instance?.let { database ->
+                    scope.launch {
+                        if (database.ingredientCategoryDao().countCategories() == 0) {
+                            database.ingredientCategoryDao().insertIngredientCategories(PREPOPULATE_DATA)
                         }
                     }
-                })
-                .build()
+                }
+            }
+        }
 
-        val PREPOPULATE_DATA = listOf(
-            IngredientCategory(null, "Крепкий алкоголь"),
-            IngredientCategory(null, "Слабый алкоголь"),
-            IngredientCategory(null, "Соки"),
-            IngredientCategory(null, "Напитки"),
-            IngredientCategory(null, "Фрукты"),
-            IngredientCategory(null, "Разное")
-        )
+        private val PREPOPULATE_DATA =
+            listOf(
+                IngredientCategory(name = "Крепкий алкоголь"),
+                IngredientCategory(name = "Слабый алкоголь"),
+                IngredientCategory(name = "Соки"),
+                IngredientCategory(name = "Напитки"),
+                IngredientCategory(name = "Фрукты"),
+                IngredientCategory(name = "Разное"),
+            )
     }
 }
