@@ -1,31 +1,50 @@
 package devilseye.cocktailadvisor.android
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_main.navigation
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import devilseye.cocktailadvisor.android.adapter.IngredientCategoryAdapter
+import devilseye.cocktailadvisor.android.database.CocktailsDatabase
+import devilseye.cocktailadvisor.android.databinding.ActivityMainBinding
+import devilseye.cocktailadvisor.android.repository.IngredientCategoryRepository
+import devilseye.cocktailadvisor.android.ui.MainViewModel
+import devilseye.cocktailadvisor.android.ui.MainViewModelFactory
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private val categoryAdapter = IngredientCategoryAdapter()
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_home -> {
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_dashboard -> {
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_notifications -> {
-                return@OnNavigationItemSelectedListener true
-            }
-        }
-        false
+    private val viewModel: MainViewModel by viewModels {
+        val database = CocktailsDatabase.getInstance(applicationContext)
+        val repository = IngredientCategoryRepository(database.ingredientCategoryDao())
+        MainViewModelFactory(repository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        setupUi()
+        observeState()
+    }
+
+    private fun setupUi() {
+        binding.categoryList.adapter = categoryAdapter
+        binding.navigation.setOnItemSelectedListener { true }
+    }
+
+    private fun observeState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    categoryAdapter.submitList(state.categories)
+                }
+            }
+        }
     }
 }
